@@ -1,0 +1,376 @@
+<!DOCTYPE html>
+<html lang="fi">
+<head>
+  <meta charset="utf-8">
+    <title>Kartta-demo 2</title>
+    <link rel="stylesheet" href="https://unpkg.com/leaflet@1.4.0/dist/leaflet.css"
+      integrity="sha512-puBpdR0798OZvTTbP4A8Ix/l+A4dHDD0DGqYW6RQ+9jxkRFclaxxQb/SJAWZfWAkuyeQUytO7+7N4QKrDh+drA=="
+      crossorigin=""/>
+    <script src="https://unpkg.com/leaflet@1.4.0/dist/leaflet.js"
+      integrity="sha512-QVftwZFqvtRNi0ZyCtsznlKSWOStnDORoefr1enyq5mVL4tmKB3S/EnC3rRJcxCPavG10IcrVGSmPh6Qw5lwrg=="
+      crossorigin=""></script>
+    <script src="https://demo.sotavalta.org/map/leaflet-search.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/leaflet-search@2.9.8/dist/leaflet-search.src.min.js"></script>
+    <link rel="stylesheet" href="https://demo.sotavalta.org/map/leaflet-search.min.css">
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.8.1/css/all.css" integrity="sha384-50oBUHEmvpQ+1lW4y57PTFmhCaXp0ML5d60M1M7uH2+nqUivzIebhndOJK28anvf" crossorigin="anonymous">
+    
+        <style>
+        @import url("https://fonts.googleapis.com/css?family=Poppins:400,700&subset=latin-ext");
+body {
+  padding: 0;
+  margin: 0;
+}
+
+html, body, #map {
+  height: 100%;
+  width: 100%;
+  font-family: "Poppins", "Arial", sans-serif;
+}
+
+input[type="text"], input[type="email"], input[type="url"], input[type="password"], input[type="search"], input[type="number"], input[type="tel"], input[type="range"], input[type="date"], input[type="month"], input[type="week"], input[type="time"], input[type="datetime"], input[type="datetime-local"], input[type="color"], textarea {
+  font-family: "Poppins", "Arial", sans-serif;
+}
+
+#map {
+  margin: 0 auto;
+}
+
+.map-icon {
+  -webkit-transition: fill 2s;
+  -moz-transition: fill 2s;
+  -ms-transition: fill 2s;
+  -o-transition: fill 2s;
+  transition: fill 2s;
+  fill: #4999ae;
+}
+
+.map-icon:hover {
+  fill: #A9E0FF;
+}
+
+.leaflet-popup-content-wrapper {
+  padding: 5px;
+  border-radius: 0;
+  overflow: auto;
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content {
+  -webkit-hyphens: auto;
+  -ms-hyphens: auto;
+  hyphens: auto;
+}
+
+.leaflet-popup-content-wrapper .leaflet-popup-content h1 {
+  margin: 0 auto;
+  margin-bottom: 10px;
+  line-height: 130%;
+  padding-bottom: 5px;
+  border-bottom: 5px solid #000;
+}
+
+.leaflet-popup-content-wrapper a, .leaflet-popup-content-wrapper a:active, .leaflet-popup-content-wrapper a:hover, .leaflet-popup-content-wrapper a:visited {
+  -webkit-transition: all 0.5s linear;
+  -moz-transition: all 0.5s linear;
+  -ms-transition: all 0.5s linear;
+  -o-transition: all 0.5s linear;
+  transition: all 0.5s linear;
+  color: #4999ae;
+  text-decoration: none;
+}
+
+.leaflet-popup-content-wrapper a:hover, .leaflet-popup-content-wrapper a:active:hover, .leaflet-popup-content-wrapper a:hover:hover, .leaflet-popup-content-wrapper a:visited:hover {
+  color: #A9E0FF;
+}
+
+.leaflet-popup-content-wrapper .info-link, .leaflet-popup-content-wrapper .info-campus {
+  display: inline-block;
+  padding-bottom: 5px;
+}
+
+.leaflet-popup-content-wrapper .info-link {
+  float: left;
+  width: 35%;
+}
+
+.leaflet-popup-content-wrapper .info-campus {
+  float: right;
+  width: 60%;
+}
+
+.leaflet-popup-content-wrapper .info-degree {
+  width: 100%;
+  display: block;
+  clear: both;
+  margin-top: 13px;
+  padding-top: 10px;
+  border-top: 5px solid #000;
+}
+
+.leaflet-touch .leaflet-bar a:first-child {
+    
+  -webkit-border-top-left-radius: 0px!important;
+  -webkit-border-top-right-radius: 0px!important;
+  -moz-border-top-left-radius: 0px!important;
+  -moz-border-top-right-radius: 0px!important;
+  -khtml-border-top-right-radius: 0px!important;
+  -khtml-border-top-left-radius: 0px!important;
+  border-top-left-radius: 0px!important;
+  border-top-right-radius: 0px!important;
+}
+
+.leaflet-touch .leaflet-bar a:last-child {
+  -webkit-border-bottom-left-radius: 0px!important;
+  -webkit-border-bottom-right-radius: 0px!important;
+  -moz-border-bottom-left-radius: 0px!important;
+  -moz-border-bottom-right-radius: 0px!important;
+  -khtml-border-bottom-right-radius: 0px!important;
+  -khtml-border-bottom-left-radius: 0px!important;
+  border-bottom-left-radius: 0px!important;
+  border-bottom-right-radius: 0px!important;
+}
+        
+    .leaflet-bar a:first-child, .leaflet-bar a:first-child:hover {
+    border-bottom: 3px solid #4999ae;
+    border-bottom-width: 3px;
+    border-bottom-style: solid;
+    border-bottom-color: #4999ae;
+}
+        
+.leaflet-touch .leaflet-bar a:last-child:hover {border-bottom:0;}
+
+.leaflet-popup-content {
+  margin: 10px 10px;
+  line-height: 1.4;
+}
+
+.leaflet-popup-content p {
+  margin: 10px 0;
+  background: red;
+}
+
+.leaflet-popup-content-wrapper,
+.leaflet-popup-tip {
+  background: #fff;
+  color: #000;
+  border: 3px solid #4999ae;
+  box-shadow: none;
+}
+
+.leaflet-popup-tip {
+  margin-top: -15px;
+  z-index: 9999999999999;
+}
+
+.leaflet-popup-tip {
+  width: 10px;
+  height: 10px;
+}
+
+img.popup-logo {
+  width: 70%;
+  max-width: 300px;
+  margin: 0 auto;
+    left:0; right:0;
+  margin-top: 10px;
+  text-align: center;
+  padding: 5px 10px;
+  box-sizing: border-box;
+}
+
+.leaflet-touch .leaflet-bar {
+  border: 3px solid #4999ae;
+  border-radius: 0;
+}
+
+.leaflet-bar a {
+  -webkit-transition: background-color 0.4s linear;
+  -moz-transition: background-color 0.4s linear;
+  -ms-transition: background-color 0.4s linear;
+  -o-transition: background-color 0.4s linear;
+  transition: background-color 0.4s linear;
+  border-bottom: 3px solid #4999ae;
+  font-family: "Poppins", "Arial", sans-serif;
+  font-weight: normal;
+  border-radius: 0px;
+  font-size: 23px;
+}
+
+.leaflet-bar a:hover {
+  background-color: rgba(73, 153, 174, 0.5);
+}
+
+.leaflet-container .leaflet-control-search {
+  border: 3px solid #4999ae;
+  border-radius: 0;
+}
+
+.leaflet-container .leaflet-control-search.search-exp {
+  background: #fff;
+  border: 3px solid #4999ae;
+  border-radius: 0;
+  background-clip: padding-box;
+}
+
+.leaflet-container .leaflet-control-search.search-exp .search-button {
+  border-left: 3px solid #4999ae;
+}
+
+.leaflet-control-search .search-button {
+  -webkit-transition: background-color 0.4s linear;
+  -moz-transition: background-color 0.4s linear;
+  -ms-transition: background-color 0.4s linear;
+  -o-transition: background-color 0.4s linear;
+  transition: background-color 0.4s linear;
+  display: block;
+  float: left;
+  width: 30px;
+  height: 30px;
+  background-size: 70%;
+  border-radius: 0px;
+}
+
+.leaflet-control-search .search-button:hover {
+  background-color: rgba(73, 153, 174, 0.5);
+}
+
+.leaflet-bar {
+  box-shadow: none;
+  border: 3px solid #4999ae;
+  border-radius: 0;
+}
+
+.leaflet-control-search .search-input {
+  min-width: 100px;
+  border: 0;
+  border-radius: 0;
+}
+
+.leaflet-control-search .search-input:focus {
+  outline: none;
+}
+
+.leaflet-control-search .search-tip {
+  margin: 2px;
+  padding: 2px 4px;
+  display: block;
+  color: #000;
+  background: #eee;
+  border-radius: 0;
+  text-decoration: none;
+  white-space: nowrap;
+  vertical-align: center;
+}
+
+.leaflet-control-search .search-tooltip {
+  position: absolute;
+  top: 100%;
+  left: 0;
+  float: left;
+  list-style: none;
+  padding-left: 0;
+  min-width: 120px;
+  max-height: 122px;
+  box-shadow: none;
+  background-color: none;
+  z-index: 1010;
+  overflow-y: auto;
+  overflow-x: hidden;
+  cursor: pointer;
+}
+
+.leaflet-container .leaflet-control-search {
+  border-color: #4999ae;
+}
+
+.leaflet-container a.leaflet-popup-close-button {
+  -webkit-transition: color 0.5s linear;
+  -moz-transition: color 0.5s linear;
+  -ms-transition: color 0.5s linear;
+  -o-transition: color 0.5s linear;
+  transition: color 0.5s linear;
+  position: absolute;
+  top: 0;
+  right: 0;
+  padding: 5px 5px 0 0;
+  width: 18px;
+  height: 18px;
+  font: 24px/18px "Poppins", "Arial", sans-serif;
+  color: #4999ae;
+  text-decoration: none;
+  font-weight: normal;
+  background: transparent;
+}
+
+.leaflet-container a.leaflet-popup-close-button:hover {
+  color: #A9E0FF;
+}
+
+    </style>
+    
+</head>
+    <body>
+        <div id='map'></div>
+        <script>
+	//sample data values for populate map
+	        
+	var data = [
+		{"loc":[60.201530,24.966200], "title":"Yrkeshögskolan Arcada (Arcada)",  "degree":"Ensihoitaja (YH), Fysioterapeutti (YH), Insinööri (YH), Kulttuurituottaja (YH), Kätilö (YH), Liikunnanohjaaja (YH), Medianomi (YH), Sairaanhoitaja (YH), Sosionomi (YH), Terveydenhoitaja (YH), Toimintaterapeutti (YH), Tradenomi (YH)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/arcada_logo_black.png", "www":"https://www.arcada.fi/sv", "campus":"Helsinki"},
+		{"loc":[63.833990,23.158520], "title":"Centria-ammattikorkeakoulu (Centria)", "degree":"Insinööri (AMK), Musiikkipedagogi (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Terveydenhoitaja (AMK), Tradenomi (AMK), Yhteisöpedagogi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/Centria-logo-mod.png", "www":"https://web.centria.fi", "campus":"Kokkola, Ylivieska, Pietarsaari"}, // CENTRIA
+		{"loc":[60.199261,24.969350], "title":"Diakonia-ammattikorkeakoulu (Diak)", "degree":"Sairaanhoitaja (AMK), Sosionomi (AMK), Terveydenhoitaja (AMK), Tulkki (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/02/Diak_01_vio_WEB.png", "www":"https://www.diak.fi", "campus":"Helsinki, Oulu, Pieksämäki, Pori, Turku"}, // DIAK 
+		{"loc":[60.201790,24.933960], "title":"Haaga-Helia ammattikorkeakoulu (Haaga-Helia)", "degree":"Liikunnanohjaaja (AMK), Medianomi (AMK), Restonomi (AMK), Tradenomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/HAAGA_HELIA_suomi.png", "www":"http://www.haaga-helia.fi/fi/etusivu", "campus":"Helsinki, Porvoo, Vierumäki"}, //HAAGA-HELIA
+		{"loc":[60.221730,24.901160], "title":"Humanistinen ammattikorkeakoulu (Humak)", "degree":"Kulttuurituottaja (AMK), Tulkki (AMK), Yhteisöpedagogi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/Humak_tunnus_vaaka_RGB_C.png", "www":"https://www.humak.fi", "campus":"Helsinki, Jyväskylä, Kauniainen, Kuopio, Nurmijärvi, Turku"}, // HUMAK
+		{"loc":[60.980860,24.472300], "title":"Hämeen ammattikorkeakoulu (HAMK)", "degree":"Agrologi (AMK), Artenomi (AMK), Hortonomi (AMK), Insinööri (AMK), Metsätalousinsinööri (AMK), Rakennusmestari (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Terveydenhoitaja (AMK), Tradenomi (AMK), Ympäristösuunnittelija (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/hamk_logo.png", "www":"https://www.hamk.fi", "campus":"Evo, Forssa, Hämeenlinna, Lepaa, Mustiala, Riihimäki, Valkeakoski"}, // HAMK
+		{"loc":[60.103260,19.928800], "title":"Högskolan på Åland", "degree":"Löydät ammattikorkeakoulun tarjoamat koulutukset ammattikorkeakoulun verkkosivuilta.", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/05/HA_logo1.png", "www":"https://www.ha.ax", "campus":"Maarianhamina" }, // Högskolan på Åland
+		{"loc":[62.252180,25.747850], "title":"Jyväskylän ammattikorkeakoulu (JAMK)", "degree":"Agrologi (AMK), Fysioterapeutti (AMK), Insinööri (AMK), Kuntoutuksen ohjaaja (AMK), Kätilö (AMK), Musiikkipedagogi (AMK), Restonomi (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Toimintaterapeutti (AMK), Tradenomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/jamkfi_tunnus_sininen_suomi.png", "www":"https://www.jamk.fi/fi/Etusivu/", "campus":"Jyväskylä, Saarijärvi"}, // JAMK
+		{"loc":[62.595870,29.778230], "title":"Karelia-ammattikorkeakoulu (Karelia)", "degree":"Fysioterapeutti (AMK), Insinööri (AMK), Medianomi (AMK), Metsätalousinsinööri (AMK), Restonomi (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Terveydenhoitaja (AMK), Tradenomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/Karelia_tunnusvaaka_rgb.png", "www":"http://www.karelia.fi/fi/", "campus":"Joensuu"}, // KARELIA
+		{"loc":[64.216900,27.713220], "title":"Kajaanin ammattikorkeakoulu (KAMK)", "degree":"Insinööri (AMK), Liikunnanohjaaja (AMK), Restonomi (AMK), Sairaanhoitaja (AMK), Terveydenhoitaja (AMK), Tradenomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/02/kajaani_amk-copy-1.png", "www":"https://www.kamk.fi/fi", "campus":"Kajaani"}, // KAMK
+		{"loc":[61.012170,25.665970], "title":"LAB-ammattikorkeakoulu (LAB) Lahti", "degree":"Fysioterapeutti (AMK), Insinööri (AMK), Medianomi (AMK), Muotoilija (AMK), Restonomi (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Tradenomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/12/LAB-ENG-RGB-1.png", "www":"https://www.lab.fi/fi", "campus":"Lahti"},
+		{"loc":[66.481190,25.721660], "title":"Lapin ammattikorkeakoulu (Lapin AMK)", "degree":"Agrologi (AMK), Fysioterapeutti (AMK), Geronomi (AMK), Insinööri (AMK), Kuvataiteilija (AMK), Liikunnanohjaaja (AMK), Metsätalousinsinööri (AMK), Restonomi (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Terveydenhoitaja (AMK), Tradenomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/lapinamk_rgb.png", "www":"https://www.lapinamk.fi/fi", "campus":"Kemi, Tornio, Rovaniemi"},
+		{"loc":[60.294220,25.044150], "title":"Laurea-ammattikorkeakoulu (Laurea)", "degree":"Estenomi (AMK), Fysioterapeutti (AMK), Restonomi (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Terveydenhoitaja (AMK), Tradenomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/09/neliotunnus_laurea_rgb-small.jpg", "www":"https://www.laurea.fi", "campus":"Espoo, Vantaa, Hyvinkää, Lohja, Porvoo"}, // LAUREA
+		{"loc":[60.223580,25.078370], "title":"Metropolia Ammattikorkeakoulu (Metropolia)", "degree":"Apuvälineteknikko (AMK), Bioanalyytikko (AMK), Ensihoitaja (AMK), Fysioterapeutti (AMK), Geronomi (AMK), Insinööri (AMK), Jalkaterapeutti (AMK), Konservaattori (AMK), Kulttuurituottaja (AMK), Kätilö (AMK), Laboratorioanalyytikko (AMK), Medianomi (AMK), Muotoilija (AMK), Musiikkipedagogi (AMK), Muusikko (AMK), Optometristi (AMK), Osteopaatti (AMK), Rakennusarkkitehti (AMK), Rakennusmestari (AMK), Röntgenhoitaja (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Suuhygienisti (AMK), Terveydenhoitaja (AMK), Toimintaterapeutti (AMK), Tradenomi (AMK), Vestonomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/Metropolia_Ammattikorkeakoulu_logo.svg_.png", "www":"http://metropolia.fi", "campus":"Helsinki, Vantaa, Espoo"}, // METROPOLIA Myllypuro
+		{"loc":[63.101920,21.602440], "title":"Yrkeshögskolan Novia (Novia)", "degree":"Agrologi (YH), Bioanalyytikko (YH), Estenomi (YH), Hortonomi (AMK), Insinööri (YH), Kuvataiteilija (YH), Kätilö (AMK), Medianomi (YH), Merikapteeni (YH), Metsätalousinsinööri (YH), Muotoilija (AMK), Musiikkipedagogi (AMK), Muusikko (YH), Rakennusmestari (YH), Röntgenhoitaja (YH), Sairaanhoitaja (AMK), Sosionomi (YH), Teatteri-ilmaisun ohjaaja (YH), Terveydenhoitaja (YH), Tradenomi (YH), Ympäristösuunnittelija (YH)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/logooffset-1024x535.jpg", "www":"https://www.novia.fi", "campus":"Vaasa, Turku, Raasepori, Pietarsaari"}, // NOVIA
+		{"loc":[64.999460,25.510550], "title":"Oulun ammattikorkeakoulu (Oamk)", "degree":"Agrologi (AMK), Bioanalyytikko (AMK), Ensihoitaja (AMK), Fysioterapeutti (AMK), Insinööri (AMK), Kätilö (AMK), Medianomi (AMK), Musiikkipedagogi (AMK), Optometristi (AMK), Rakennusarkkitehti (AMK), Rakennusmestari (AMK), Röntgenhoitaja (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Suuhygienisti (AMK), Tanssinopettaja (AMK), Terveydenhoitaja (AMK), Toimintaterapeutti (AMK), Tradenomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/Toimistokayttoon_Suomeksi-06-1024x476.png", "www":"https://www.oamk.fi/fi/", "campus":"Oulu, Oulainen"}, // Oamk
+		{"loc":[61.454260,23.855290], "title":"Poliisiammattikorkeakoulu (Polamk)", "degree":"Löydät ammattikorkeakoulun tarjoamat koulutukset ammattikorkeakoulun verkkosivuilta.", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/05/Polamk_logo.png", "www":"https://www.polamk.fi/fi", "campus":"Tampere"}, // Polamk
+		{"loc":[61.064796,28.092231], "title":"LAB-ammattikorkeakoulu (LAB) Lappeenranta", "degree":"Ensihoitaja (AMK), Fysioterapeutti (AMK), Insinööri (AMK), Kuvataiteilija (AMK), Rakennusmestari (AMK), Restonomi (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Terveydenhoitaja (AMK), Tradenomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/12/LAB-ENG-RGB-1.png", "www":"https://www.saimia.fi", "campus":"Lappeenranta"}, // SAIMAAN AMK
+		{"loc":[61.477330,21.791160], "title":"Satakunnan ammattikorkeakoulu (SAMK)", "degree":"Fysioterapeutti (AMK), Geronomi (AMK), Insinööri (AMK), Kuntoutuksen ohjaaja (AMK), Kuvataiteilija (AMK), Merikapteeni (AMK), Restonomi (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Tradenomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/SAMK-logo.png", "www":"https://www.samk.fi", "campus":"Pori, Rauma, Huittinen, Kankaanpää"}, // SAMK
+		{"loc":[62.888590,27.629160], "title":"Savonia-ammattikorkeakoulu (Savonia)", "degree":"Agrologi (AMK), Bioanalyytikko (AMK), Ensihoitaja (AMK), Fysioterapeutti (AMK), Insinööri (AMK), Kätilö (AMK), Muotoilija (AMK), Musiikkipedagogi (AMK), Rakennusarkkitehti (AMK), Rakennusmestari (AMK), Restonomi (AMK), Röntgenhoitaja (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Suuhygienisti (AMK), Tanssinopettaja (AMK), Terveydenhoitaja (AMK), Tradenomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/savonia.logo_-1024x576.png", "www":"https://portal.savonia.fi/amk/", "campus":"Kuopio, Iisalmi, Varkaus"}, // SAVONIA
+		{"loc":[62.789590,22.821880], "title":"Seinäjoen ammattikorkeakoulu (SeAMK)", "degree":"Agrologi (AMK), Fysioterapeutti (AMK), Geronomi (AMK), Insinööri (AMK), Kulttuurituottaja (AMK), Rakennusmestari (AMK), Restonomi (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Terveydenhoitaja (AMK), Tradenomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/seamk_logo_4vari.png", "www":"https://www.seamk.fi", "campus":"Seinäjoki"},
+		{"loc":[61.503850,23.806400], "title":"Tampereen ammattikorkeakoulu (TAMK)", "degree":"Bioanalyytikko (AMK), Ensihoitaja (AMK), Fysioterapeutti (AMK), Insinööri (AMK), Kätilö (AMK), Medianomi (AMK), Metsätalousinsinööri (AMK), Musiikkipedagogi (AMK), Muusikko (AMK), Rakennusarkkitehti (AMK), Rakennusmestari (AMK), Restonomi (AMK), Röntgenhoitaja (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Terveydenhoitaja (AMK), Tradenomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/02/TRE_LA22_AMK____fi_B3___RGB.png", "www":"https://www.tuni.fi/fi", "campus":"Tampere, Ikaalinen, Mänttä-Vilppula, Virrat, Sastamala, Seinäjoki"},
+		{"loc":[60.449180,22.295600], "title":"Turun ammattikorkeakoulu (Turun AMK)", "degree":"Bioanalyytikko (AMK) Ensihoitaja (AMK), Fysioterapeutti (AMK), Hammasteknikko (AMK), Insinööri (AMK), Kuvataiteilija (AMK), Kätilö (AMK), Medianomi (AMK), Musiikkipedagogi (AMK), Rakennusmestari (AMK), Röntgenhoitaja (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Suuhygienisti (AMK), Tanssinopettaja (AMK), Teatteri-ilmaisun ohjaaja (AMK), Terveydenhoitaja (AMK), Toimintaterapeutti (AMK), Tradenomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/turku_amk-1024x286.png", "www":"https://www.turkuamk.fi/fi/", "campus":"Turku, Salo"}, // Turun AMK
+		{"loc":[63.106630,21.591640], "title":"Vaasan ammattikorkeakoulu (VAMK)", "degree":"Insinööri (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Terveydenhoitaja (AMK), Tradenomi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/vamk-vaasan-ammattikorkeakoulu.png", "www":"http://www.puv.fi/fi/", "campus":"Vaasa"},
+		{"loc":[61.679940,27.256660], "title":"Kaakkois-Suomen ammattikorkeakoulu (Xamk)", "degree":"Artenomi (AMK), Ensihoitaja (AMK), Fysioterapeutti (AMK), Geronomi (AMK), Insinööri (AMK), Jalkaterapeutti (AMK), Liikunnanohjaaja (AMK), Merikapteeni (AMK), Metsätalousinsinööri (AMK), Muotoilija (AMK), Naprapaatti (AMK), Restonomi (AMK), Sairaanhoitaja (AMK), Sosionomi (AMK), Terveydenhoitaja (AMK), Tradenomi (AMK), Yhteisöpedagogi (AMK)", "image":"https://www.ammattikorkeakouluun.fi/wp-content/uploads/2019/01/xamk_logo_laaja2_sin_rgb-1024x644.png", "www":"https://www.xamk.fi", "campus":"Kotka, Kouvola, Mikkeli, Savonlinna"}, // XAMK
+	];
+	var map = new L.Map('map', {zoom: 6, center: new L.latLng([63.54847, 23.13066]) });	//set center from first location
+	map.addLayer(new L.TileLayer('https://{s}.basemaps.cartocdn.com/light_all/{z}/{x}/{y}{r}.png'));	//base layer
+	var markersLayer = new L.LayerGroup();	//layer contain searched elements
+	
+	map.addLayer(markersLayer);
+	var controlSearch = new L.Control.Search({
+		position:'topleft',		
+		layer: markersLayer,
+		initial: false,
+		zoom: 12,
+        textPlaceholder: 'Hae ammattikorkeakoulua',
+	});
+	map.addControl( controlSearch );
+            
+    var myIcon = L.icon({
+        iconUrl: 'https://demo.sotavalta.org/map/images/map-marker-alt.svg',
+        iconSize: [30, 30],
+        iconAnchor: [15, 30],
+        popupAnchor: [0, -26],
+        className: 'map-icon'
+    });
+
+	////////////populate map with markers from sample data
+     for(i in data) {
+         var title = data[i].title,degree=data[i].degree, image=data[i].image,
+         loc = data[i].loc, www=data[i].www, campus=data[i].campus,
+         marker = new L.Marker(new L.latLng(loc), {icon: myIcon, 
+             title:title,
+             degree:degree} );
+         marker.bindPopup('<h1>'+ title + '</h1><span class="info-link"><i class="fas fa-globe-europe" style="margin-right:2px"></i> <a href="' + www + '" target="_blank">verkkosivu</a></span> <span class="info-campus"><i class="fas fa-map-marker-alt" style="margin-left:-14px;margin-right:3px"></i> ' + campus +  '</span><br /><span class="info-degree"><b>KOULUTUKSET: </b><br />' + degree + '</span><img src="' + data[i].image + '" class="popup-logo">');
+         markersLayer.addLayer(marker);}
+        </script>
+    </body>
+</html>
